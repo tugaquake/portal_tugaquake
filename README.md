@@ -1,2 +1,2 @@
-# portal_tugaquake
-Portal (dashboard) para consultar informações relevantes para o público.
+# Portal TugaQuake
+Este portal (dashboard) foi feito pelo TugaQuake para consultar informações relevantes para o público.
