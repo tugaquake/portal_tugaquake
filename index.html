@@ -12,39 +12,43 @@
     <p>Informação pública sobre riscos em Portugal</p>
   </header>
 
-  <main>
-    <section id="alertas">
+  <main class="container">
+    <section id="alertas" class="secao">
       <h2>🔔 Alertas TugaQuake</h2>
       <ul id="lista-alertas">
         <li>Carregando alertas...</li>
       </ul>
     </section>
 
-    <section id="sismos">
+    <section id="sismos" class="secao">
       <h2>🌐 Últimos Sismos (IPMA)</h2>
       <div id="sismos-container">Carregando...</div>
     </section>
 
-    <section id="meteo">
+    <section id="meteo" class="secao">
       <h2>☀️ Avisos Meteorológicos (IPMA)</h2>
       <div id="meteo-container">Carregando...</div>
     </section>
 
-    <section id="fogos">
+    <section id="fogos" class="secao">
       <h2>🔥 Incêndios Ativos (fogos.pt / VOST)</h2>
       <div id="fogos-container">Carregando...</div>
     </section>
 
-    <section id="anepc">
+    <section id="anepc" class="secao">
       <h2>📢 Alertas Oficiais (ANEPC / emergencias.pt)</h2>
       <div id="anepc-container">Carregando...</div>
     </section>
   </main>
 
   <footer>
-    <p>© 2025 TugaQuake</p>
+    <p>© 2025 TugaQuake — Dados públicos e não oficiais. Projeto voluntário.</p>
   </footer>
 
-  <script src="script.js"></script>
+  <!-- Scripts, por ordem de dependência -->
+  <script src="sismos.js"></script>
+  <script src="meteo.js"></script>
+  <script src="incendios.js"></script>
+  <script src="alertas.js"></script>
 </body>
 </html>
