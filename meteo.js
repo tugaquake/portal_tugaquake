@@ -5,35 +5,37 @@ async function carregarAvisosMeteo() {
   const cont = document.getElementById('meteo-container');
   cont.innerHTML = '';
   try {
+    // Vai buscar o array de avisos
     const res = await fetch('https://api.ipma.pt/open-data/forecast/warnings/warnings_www.json');
-    const json = await res.json();
+    const avisos = await res.json(); // Agora avisos é um array de objetos
 
-    // Ignorar verdes e sem texto
-    const avisos = json.data.filter(a =>
-      a.awarenessLevelID !== 'green' &&
-      a.text.trim() !== ''
+    // Ignorar avisos verdes e sem texto
+    const avisosFiltrados = avisos.filter(aviso =>
+      aviso.awarenessLevelID !== 'green' &&
+      aviso.text.trim() !== ''
     );
 
-    if (!avisos.length) {
+    if (!avisosFiltrados.length) {
       cont.textContent = 'Sem avisos ativos.';
       return;
     }
 
-    // Precisamos do map de idAreaAviso → local
+    // Vai buscar o mapa de áreas (opcional, para mostrar nomes em vez de códigos)
     const regRes = await fetch('https://api.ipma.pt/open-data/distrits-islands.json');
     const regJson = await regRes.json();
     const mapa = {};
     regJson.data.forEach(r => mapa[r.idAreaAviso] = r.local);
 
-    avisos.forEach(av => {
-      const area = mapa[av.idAreaAviso] || av.idAreaAviso;
-      const start = av.startTime.replace('T', ' ').slice(0,16);
-      const end   = av.endTime.replace('T', ' ').slice(0,16);
+    // Mostra cada aviso
+    avisosFiltrados.forEach(aviso => {
+      const area = mapa[aviso.idAreaAviso] || aviso.idAreaAviso;
+      const start = aviso.startTime.replace('T', ' ').slice(0,16);
+      const end   = aviso.endTime.replace('T', ' ').slice(0,16);
       const div = document.createElement('div');
-      div.className = `aviso ${av.awarenessLevelID}`;
+      div.className = `aviso ${aviso.awarenessLevelID}`;
       div.innerHTML = `
-        <h3>${area} — ${av.awarenessTypeName} (${av.awarenessLevelID.toUpperCase()})</h3>
-        <p>${av.text}</p>
+        <h3>${area} — ${aviso.awarenessTypeName} (${aviso.awarenessLevelID.toUpperCase()})</h3>
+        <p>${aviso.text}</p>
         <small>De ${start} até ${end}</small>
       `;
       cont.appendChild(div);
