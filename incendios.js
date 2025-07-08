@@ -1,4 +1,3 @@
-// incendios.js
 document.addEventListener('DOMContentLoaded', carregarFogosAtivos);
 
 async function carregarFogosAtivos() {
@@ -6,12 +5,11 @@ async function carregarFogosAtivos() {
   cont.innerHTML = '';
   try {
     const res = await fetch('https://api.fogos.pt/v2/incidents/active?all=1');
-    const json = await res.json();
+    const incidentes = await res.json(); // A API devolve um array diretamente
 
-    // Se a API devolver um array diretamente, use json. Se devolver um objeto com .data, use json.data
-    const incidentes = Array.isArray(json) ? json : (json.data || []);
+    // Filtra incêndios ativos (Em Curso ou Em Resolução)
     const ativos = incidentes
-      .filter(f => f.state === 'active')
+      .filter(f => f.status === 'Em Curso' || f.status === 'Em Resolução')
       .slice(0, 5);
 
     if (!ativos.length) {
@@ -20,14 +18,14 @@ async function carregarFogosAtivos() {
     }
 
     ativos.forEach(f => {
-      // Alguns campos podem não existir, por isso convém validar
-      const inicio = f.start_date 
-        ? new Date(f.start_date).toLocaleString('pt-PT', { timeZone: 'Europe/Lisbon' })
-        : `${f.date || ''} ${f.hour || ''}`;
+      const inicio = f.date && f.hour
+        ? `${f.date} ${f.hour}`
+        : 'Data/hora desconhecida';
       const div = document.createElement('div');
       div.className = 'incendio';
       div.innerHTML = `
         <b>${f.location || 'Localização desconhecida'}</b> — ${f.natureza || 'Sem informação'}<br>
+        Estado: ${f.status}<br>
         Início: ${inicio}<br>
         <a href="https://fogos.pt" target="_blank">Mais informações em fogos.pt</a>
       `;
