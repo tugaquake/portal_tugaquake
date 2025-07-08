@@ -8,7 +8,9 @@ async function carregarFogosAtivos() {
     const res = await fetch('https://api.fogos.pt/v2/incidents/active?all=1');
     const json = await res.json();
 
-    const ativos = json.data
+    // Se a API devolver um array diretamente, use json. Se devolver um objeto com .data, use json.data
+    const incidentes = Array.isArray(json) ? json : (json.data || []);
+    const ativos = incidentes
       .filter(f => f.state === 'active')
       .slice(0, 5);
 
@@ -18,13 +20,16 @@ async function carregarFogosAtivos() {
     }
 
     ativos.forEach(f => {
-      const inicio = new Date(f.start_date).toLocaleString('pt-PT', { timeZone: 'Europe/Lisbon' });
+      // Alguns campos podem não existir, por isso convém validar
+      const inicio = f.start_date 
+        ? new Date(f.start_date).toLocaleString('pt-PT', { timeZone: 'Europe/Lisbon' })
+        : `${f.date || ''} ${f.hour || ''}`;
       const div = document.createElement('div');
       div.className = 'incendio';
       div.innerHTML = `
-        <b>${f.location}</b> — ${f.natureza}  
-        <br>Início: ${f.date} ${f.hour}  
-        <br><a href="https://fogos.pt" target="_blank">Mais informações em fogos.pt</a>
+        <b>${f.location || 'Localização desconhecida'}</b> — ${f.natureza || 'Sem informação'}<br>
+        Início: ${inicio}<br>
+        <a href="https://fogos.pt" target="_blank">Mais informações em fogos.pt</a>
       `;
       cont.appendChild(div);
     });
