@@ -6,9 +6,9 @@ async function carregarFogosAtivos() {
   try {
     const res = await fetch('https://api.fogos.pt/v2/incidents/active?all=1');
     const json = await res.json();
-    const incidentes = json.data || []; // <-- Corrigido aqui!
+    const incidentes = json.data || [];
 
-    // Filtra incêndios ativos pelo campo booleano 'active'
+    // Mostra só incêndios ativos (onde active é true)
     const ativos = incidentes.filter(f => f.active).slice(0, 5);
 
     if (!ativos.length) {
