@@ -5,12 +5,11 @@ async function carregarFogosAtivos() {
   cont.innerHTML = '';
   try {
     const res = await fetch('https://api.fogos.pt/v2/incidents/active?all=1');
-    const incidentes = await res.json(); // A API devolve um array diretamente
+    const json = await res.json();
+    const incidentes = json.data || []; // <-- Corrigido aqui!
 
-    // Filtra incêndios ativos (Em Curso ou Em Resolução)
-    const ativos = incidentes
-      .filter(f => f.status === 'Em Curso' || f.status === 'Em Resolução')
-      .slice(0, 5);
+    // Filtra incêndios ativos pelo campo booleano 'active'
+    const ativos = incidentes.filter(f => f.active).slice(0, 5);
 
     if (!ativos.length) {
       cont.textContent = 'Sem incêndios ativos.';
