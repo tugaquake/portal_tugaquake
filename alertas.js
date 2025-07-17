@@ -24,7 +24,7 @@ async function carregarANEPC() {
   const cont = document.getElementById('anepc-container');
   cont.innerHTML = '';
   try {
-    const res = await fetch('https://raw.githubusercontent.com/teu-usuario/portal-tugaquake/main/anepc.json');
+    const res = await fetch('https://raw.githubusercontent.com/tugaquake/portal-tugaquake/main/anepc.json');
     const data = await res.json();
     data.forEach(a => {
       const div = document.createElement('div');
