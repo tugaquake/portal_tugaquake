@@ -25,7 +25,7 @@ async function carregarAlertasTQ() {
       li.innerHTML = `
         <strong>[${new Date(a.hora).toLocaleString()}] ${a.titulo}</strong><br>
         ${a.mensagem}
-        <em> (${a.zona}, Tipo: ${a.canal})</em>
+        <em> (${a.topico}, Tipo: ${a.canal})</em>
       `;
       lista.appendChild(li);
     });
