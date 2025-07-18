@@ -13,13 +13,19 @@ async function carregarAlertasTQ() {
     const res = await fetch('https://tugaquake.github.io/dados_tugaquake/alertas.json');
     const data = await res.json();
 
+    // Verificação se data é array e se está vazio
+    if (!Array.isArray(data) || data.length === 0) {
+      lista.innerHTML = '<li>Não há alertas TugaQuake.</li>';
+      return;
+    }
+
     // 2) Para cada alerta, usar os campos hora, titulo e mensagem
     data.forEach(a => {
       const li = document.createElement('li');
       li.innerHTML = `
         <strong>[${new Date(a.hora).toLocaleString()}] ${a.titulo}</strong><br>
         ${a.mensagem}
-        <em> (${a.zona}, canal: ${a.canal})</em>
+        <em> (${a.zona}, Tipo: ${a.canal})</em>
       `;
       lista.appendChild(li);
     });
@@ -30,20 +36,3 @@ async function carregarAlertasTQ() {
   }
 }
 
-async function carregarANEPC() {
-  const cont = document.getElementById('anepc-container');
-  cont.innerHTML = '';
-  try {
-    const res = await fetch('https://raw.githubusercontent.com/tugaquake/portal-tugaquake/main/anepc.json');
-    const data = await res.json();
-    data.forEach(a => {
-      const div = document.createElement('div');
-      div.className = 'alerta-oficial';
-      div.innerHTML = `<b>${a.titulo}</b><br>${a.descricao}`;
-      cont.appendChild(div);
-    });
-  } catch (e) {
-    console.error(e);
-    cont.textContent = 'Erro ao carregar alertas oficiais.';
-  }
-}
